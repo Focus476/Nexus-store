@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS // Login</title>
+    <title>Login // NEXUS</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,6 +15,7 @@
             --text-muted: #9ca3af;
             --border-color: rgba(255, 255, 255, 0.1);
         }
+
         body {
             margin: 0;
             font-family: 'Outfit', sans-serif;
@@ -24,73 +25,127 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
-        .form-card {
+
+        .login-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 40px;
             border-radius: 12px;
+            padding: 40px;
             width: 100%;
             max-width: 400px;
+            box-sizing: border-box;
             backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
         }
-        h2 { margin-top: 0; color: var(--accent-color); text-align: center; }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; }
-        input {
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input {
             width: 100%;
             padding: 12px;
-            background: rgba(11, 15, 25, 0.5);
-            border: 1px solid var(--border-color);
             border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
             color: var(--text-main);
             font-family: 'Outfit', sans-serif;
             box-sizing: border-box;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
         }
-        input:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 10px var(--accent-glow); }
+
+        .form-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
         .submit-btn {
             width: 100%;
+            padding: 12px;
             background: var(--accent-color);
             color: var(--bg-color);
             border: none;
-            padding: 12px;
-            font-weight: 700;
             border-radius: 6px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
             font-family: 'Outfit', sans-serif;
-            transition: box-shadow 0.2s;
+            transition: box-shadow 0.2s ease;
+            margin-top: 10px;
         }
-        .submit-btn:hover { box-shadow: 0 0 15px var(--accent-glow); }
-        .message { margin-top: 15px; text-align: center; font-size: 0.9rem; }
-        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
-        .back-link:hover { color: var(--accent-color); }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
-    <div class="form-card">
+
+    <div class="login-card">
         <h2>Login to NEXUS</h2>
-        <form id="loginForm">
-            <div class="input-group">
+        <form id="login-form">
+            <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" id="email" required>
+                <input type="email" id="email" required placeholder="name@example.com">
             </div>
-            <div class="input-group">
+            <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="password" required>
+                <input type="password" id="password" required placeholder="••••••••">
             </div>
             <button type="submit" class="submit-btn">Login</button>
+            <div id="error-message" class="error-msg">Server connection failed.</div>
         </form>
-        <div class="message" id="responseMessage"></div>
         <a href="index.html" class="back-link">&larr; Back to Store</a>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const msgBox = document.getElementById('responseMessage');
+            const errorDiv = document.getElementById('error-message');
+
+            errorDiv.style.display = 'none';
 
             try {
                 const response = await fetch('https://nexus-store-2qph.onrender.com/api/login', {
@@ -100,18 +155,17 @@
                     credentials: 'include'
                 });
 
-                const resultText = await response.text();
+                const data = await response.json();
+
                 if (response.ok) {
-                    msgBox.style.color = 'var(--accent-color)';
-                    msgBox.textContent = resultText;
-                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    window.location.href = 'index.html';
                 } else {
-                    msgBox.style.color = '#ff4d4d';
-                    msgBox.textContent = resultText;
+                    errorDiv.textContent = data.message || 'Login failed.';
+                    errorDiv.style.display = 'block';
                 }
             } catch (err) {
-                msgBox.style.color = '#ff4d4d';
-                msgBox.textContent = 'Server connection failed.';
+                errorDiv.textContent = 'Server connection failed.';
+                errorDiv.style.display = 'block';
             }
         });
     </script>
