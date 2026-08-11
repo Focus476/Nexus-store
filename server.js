@@ -15,8 +15,8 @@ app.use(cors({
     credentials: true
 }));
 
-// MongoDB Connection (Replace with your actual MongoDB URI if using environment variables)
-const MONGO_URI = process.env.MONGO_URI || 'YOUR_MONGODB_CONNECTION_STRING';
+// MongoDB Connection using Environment Variable
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
