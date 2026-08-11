@@ -1,43 +1,29 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-const MONGO_URI = process.env.MONGO_URI;
-let cachedDb = null;
-
-async function connectToDatabase() {
-    if (cachedDb) return;
-    await mongoose.connect(MONGO_URI);
-    cachedDb = mongoose.connection;
-}
-
-const userSchema = new mongoose.Schema({
-    username: String,
-    email: { type: String, unique: true },
-    password: String
-});
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
     try {
-        await connectToDatabase();
-        const { username, email, password } = JSON.parse(event.body);
+        const response = await fetch('/.netlify/functions/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password })
+        });
 
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return { statusCode: 400, body: JSON.stringify({ message: 'Email already registered.' }) };
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Registration successful! Please log in.');
+            window.location.href = '/login.html';
+        } else {
+            alert(data.message || 'Registration failed.');
         }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword });
-        await newUser.save();
-
-        return { statusCode: 201, body: JSON.stringify({ message: 'User registered successfully!' }) };
     } catch (err) {
-        console.error(err);
-        return { statusCode: 500, body: JSON.stringify({ message: 'Server error during registration.' }) };
+        console.error('Error:', err);
+        alert('Server connection failed.');
     }
-};
+});
