@@ -15,8 +15,8 @@ app.use(cors({
     credentials: true
 }));
 
-// MongoDB Connection using Environment Variable
-const MONGO_URI = process.env.MONGO_URI;
+// MongoDB Connection with your actual string
+const MONGO_URI = 'mongodb+srv://myAppUser:Tengo2012@cluster0.9a1wral.mongodb.net/nexusStore?appName=Cluster0';
 
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
@@ -42,17 +42,15 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: MONGO_URI }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 1 day
-        secure: true, // Required for cross-site cookies on HTTPS
-        sameSite: 'none' // Required for cross-site requests between Netlify and Render
+        secure: true, 
+        sameSite: 'none' 
     }
 }));
 
-// Trust proxy (Required for secure cookies behind Render's proxy)
+// Trust proxy 
 app.set('trust proxy', 1);
 
 // Routes
-
-// Register Route
 app.post('/api/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -73,7 +71,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Login Route
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -88,7 +85,6 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid email or password.' });
         }
 
-        // Save user session
         req.session.userId = user._id;
         req.session.username = user.username;
 
@@ -99,7 +95,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Check Auth Route
 app.get('/api/check-auth', (req, res) => {
     if (req.session && req.session.userId) {
         res.json({ isAuthenticated: true, username: req.session.username });
@@ -108,7 +103,6 @@ app.get('/api/check-auth', (req, res) => {
     }
 });
 
-// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
