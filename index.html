@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS // High-End PC Hardware</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --accent-color: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.2);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+
+        .nav-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        ul.nav-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        li a {
+            display: block;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        li a:hover, li a.active {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-login:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-register {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .hero {
+            padding: 140px 20px 60px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-color) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .product-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .product-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .price {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .buy-btn {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .buy-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">NEXUS</a>
+        
+        <ul class="nav-list">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+
+        <div class="auth-buttons" id="auth-container">
+            <a href="login.html" class="auth-btn btn-login">Login</a>
+            <a href="register.html" class="auth-btn btn-register">Register</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Next-Gen PC Hardware</h1>
+        <p>Engineered for elite performance, extreme gaming, and heavy development workloads.</p>
+    </div>
+
+    <div class="container">
+        <div class="product-grid">
+            <div class="product-card">
+                <span class="badge">GPU</span>
+                <h3>RTX 4070 Super OC</h3>
+                <p>12GB GDDR6X, triple-fan cooling system built for ray-tracing and high FPS gaming.</p>
+                <div class="card-footer">
+                    <div class="price">$599.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge">CPU</span>
+                <h3>AMD Ryzen 7 7800X3D</h3>
+                <p>8 Cores, 16 Threads. The ultimate processor for high-speed computation and gaming.</p>
+                <div class="card-footer">
+                    <div class="price">$389.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge">RAM</span>
+                <h3>Corsair Vengeance 32GB</h3>
+                <p>DDR5 RAM 5600MHz RGB kit optimized for multitasking and extreme stability.</p>
+                <div class="card-footer">
+                    <div class="price">$104.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge">MOTHERBOARD</span>
+                <h3>ASUS ROG Strix B650-A</h3>
+                <p>WiFi 6E, DDR5 support, and robust power delivery built for high-end Ryzen builds.</p>
+                <div class="card-footer">
+                    <div class="price">$229.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge">STORAGE</span>
+                <h3>Samsung 990 PRO 2TB</h3>
+                <p>PCIe 4.0 NVMe M.2 SSD with lightning-fast read speeds up to 7,450 MB/s.</p>
+                <div class="card-footer">
+                    <div class="price">$169.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge">PSU</span>
+                <h3>Corsair RM750e 750W</h3>
+                <p>Fully modular, 80 PLUS Gold certified low-noise power supply with ATX 3.0 support.</p>
+                <div class="card-footer">
+                    <div class="price">$99.99</div>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check auth status from Render backend
+        fetch('https://nexus-store-2qph.onrender.com/api/check-auth', { credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.isAuthenticated) {
+                    const authContainer = document.getElementById('auth-container');
+                    authContainer.innerHTML = `<span style="color: var(--accent-color); font-weight: 600; line-height: 38px;">Welcome, ${data.username}</span>`;
+                }
+            })
+            .catch(err => console.log('Auth check error:', err));
+    </script>
+</body>
+</html>

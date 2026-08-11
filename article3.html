@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS // Choosing the Right PSU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --accent-color: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.2);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        ul.nav-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70px;
+        }
+
+        li a {
+            display: block;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 10px 24px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        li a:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Article Content Container */
+        .article-container {
+            max-width: 800px;
+            margin: 140px auto 80px;
+            padding: 0 20px;
+        }
+
+        .article-date {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-color) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .article-body {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+        }
+
+        .article-body p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .article-body h3 {
+            color: var(--text-main);
+            font-size: 1.4rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul class="nav-list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="article-container">
+        <div class="article-date">August 3, 2026</div>
+        <h1>Choosing the Right PSU for Power-Hungry Builds</h1>
+        
+        <div class="article-body">
+            <p>When planning a high-end custom PC, it is easy to focus all your attention on the GPU and CPU while treating the power supply unit (PSU) as an afterthought. However, a reliable power supply is the beating heart of a stable system.</p>
+            
+            <h3>Understanding Transient Power Spikes</h3>
+            <p>Modern components can experience sharp, millisecond-long surges in power draw known as transient spikes. If an older or lower-quality PSU cannot handle these sudden surges, it can trigger built-in over-current protection and shut down your computer right in the middle of an intensive game or render session.</p>
+            
+            <h3>Why ATX 3.0 Matters</h3>
+            <p>Newer power supplies featuring ATX 3.0 certification are explicitly engineered to absorb power spikes up to twice their rated wattage safely. Paired with 80 PLUS Gold or Platinum efficiency ratings, these modern units ensure cleaner power delivery, less heat generation, and better overall component longevity.</p>
+
+            <a href="news.html" class="back-btn">&larr; Back to News</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS // Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --accent-color: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.2);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h2 { margin-top: 0; color: var(--accent-color); text-align: center; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(11, 15, 25, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 10px var(--accent-glow); }
+        .submit-btn {
+            width: 100%;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: box-shadow 0.2s;
+        }
+        .submit-btn:hover { box-shadow: 0 0 15px var(--accent-glow); }
+        .message { margin-top: 15px; text-align: center; font-size: 0.9rem; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { color: var(--accent-color); }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <h2>Login to NEXUS</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <div class="message" id="responseMessage"></div>
+        <a href="index.html" class="back-link">&larr; Back to Store</a>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msgBox = document.getElementById('responseMessage');
+
+            try {
+                const response = await fetch('https://nexus-store-2qph.onrender.com/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
+                });
+
+                const resultText = await response.text();
+                if (response.ok) {
+                    msgBox.style.color = 'var(--accent-color)';
+                    msgBox.textContent = resultText;
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    msgBox.style.color = '#ff4d4d';
+                    msgBox.textContent = resultText;
+                }
+            } catch (err) {
+                msgBox.style.color = '#ff4d4d';
+                msgBox.textContent = 'Server connection failed.';
+            }
+        });
+    </script>
+</body>
+</html>
