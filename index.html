@@ -73,6 +73,12 @@
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .auth-buttons {
             display: flex;
             gap: 12px;
@@ -221,6 +227,23 @@
             color: var(--bg-color);
             box-shadow: 0 0 15px var(--accent-glow);
         }
+
+        /* Cart Modal Drawer Styling */
+        #cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100%;
+            background: #111827;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            z-index: 2000;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -230,14 +253,14 @@
         
         <ul class="nav-list">
             <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="news.html">News</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="about.html">About</a></li>
         </ul>
 
-        <div class="auth-buttons" id="auth-container">
-            <a href="login.html" class="auth-btn btn-login">Login</a>
-            <a href="register.html" class="auth-btn btn-register">Register</a>
+        <div class="nav-right">
+            <button id="cart-toggle-btn" class="auth-btn btn-login">Cart (<span id="cart-count">0</span>)</button>
+            <div class="auth-buttons" id="auth-container">
+                <a href="login.html" class="auth-btn btn-login">Login</a>
+                <a href="register.html" class="auth-btn btn-register">Register</a>
+            </div>
         </div>
     </nav>
 
@@ -310,6 +333,25 @@
         </div>
     </div>
 
+    <div id="cart-modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+            <h3 style="margin: 0; color: #00f0ff;">Your Cart</h3>
+            <button id="close-cart-btn" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div id="cart-items-container" style="flex-grow: 1; overflow-y: auto; padding: 15px 0;">
+            <p style="color: #9ca3af; text-align: center; margin-top: 40px;">Your cart is empty.</p>
+        </div>
+
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 600;">
+                <span>Total:</span>
+                <span id="cart-total" style="color: #00f0ff;">$0.00</span>
+            </div>
+            <button onclick="alert('Checkout feature coming soon!')" class="auth-btn btn-register" style="width: 100%; padding: 12px; text-align: center;">Proceed to Checkout</button>
+        </div>
+    </div>
+
     <script>
         // Check auth status from Render backend
         fetch('https://nexus-store-2qph.onrender.com/api/check-auth', { credentials: 'include' })
@@ -321,6 +363,73 @@
                 }
             })
             .catch(err => console.log('Auth check error:', err));
+
+        // Cart State & Logic
+        let cart = [];
+        const cartModal = document.getElementById('cart-modal');
+
+        document.getElementById('cart-toggle-btn').addEventListener('click', () => {
+            cartModal.style.display = cartModal.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.getElementById('close-cart-btn').addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const buyBtn = card.querySelector('.buy-btn');
+            const title = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('.price').textContent;
+            const price = parseFloat(priceText.replace('$', ''));
+
+            buyBtn.addEventListener('click', () => {
+                const existingItem = cart.find(item => item.title === title);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ title, price, quantity: 1 });
+                }
+                updateCartUI();
+                cartModal.style.display = 'flex';
+            });
+        });
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const countBadge = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p style="color: #9ca3af; text-align: center; margin-top: 40px;">Your cart is empty.</p>`;
+            } else {
+                container.innerHTML = '';
+                cart.forEach((item, index) => {
+                    totalItems += item.quantity;
+                    totalPrice += item.price * item.quantity;
+
+                    container.innerHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">${item.title}</div>
+                                <div style="color: #9ca3af; font-size: 0.8rem;">$${item.price.toFixed(2)} x ${item.quantity}</div>
+                            </div>
+                            <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 1rem;">&times;</button>
+                        </div>
+                    `;
+                });
+            }
+
+            countBadge.textContent = totalItems;
+            totalEl.textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        window.removeFromCart = function(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
     </script>
 </body>
 </html>
