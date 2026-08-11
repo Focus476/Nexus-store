@@ -1,47 +1,28 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-const MONGO_URI = process.env.MONGO_URI;
-let cachedDb = null;
-
-async function connectToDatabase() {
-    if (cachedDb) return;
-    await mongoose.connect(MONGO_URI);
-    cachedDb = mongoose.connection;
-}
-
-const userSchema = new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String
-});
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
     try {
-        await connectToDatabase();
-        const { email, password } = JSON.parse(event.body);
+        const response = await fetch('/.netlify/functions/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return { statusCode: 400, body: JSON.stringify({ message: 'Invalid email or password.' }) };
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Login successful!');
+            window.location.href = '/dashboard.html'; // Change to your destination page
+        } else {
+            alert(data.message || 'Login failed.');
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return { statusCode: 400, body: JSON.stringify({ message: 'Invalid email or password.' }) };
-        }
-
-        return { 
-            statusCode: 200, 
-            body: JSON.stringify({ message: 'Logged in successfully!', username: user.username }) 
-        };
     } catch (err) {
-        console.error(err);
-        return { statusCode: 500, body: JSON.stringify({ message: 'Server error during login.' }) };
+        console.error('Error:', err);
+        alert('Server connection failed.');
     }
-};
+});
